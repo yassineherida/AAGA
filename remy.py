@@ -1,5 +1,4 @@
 import random
-import random
 from hypothesis.strategies import integers,lists,texts
 from hypothesis import given
 
@@ -74,13 +73,13 @@ def growing_tree_deter(n,t):
         tree[2*i-1].left = -1
         tree[2*i].right = -1
         tree[2*i].left = -1
+    return tree
 
-
-def mot(A):
-    if (A.left==None and A.right==None):
+def mot(A, i):
+    if (A[i].left==-1 and A[i].right==-1):
         return ""
-    else :
-        return "("+mot(A.left)+")"+"("+mot(A.right)+")"
+    else:
+        return "("+mot(A, A[i].left)+")"+mot(A, A[i].right)
     
 def all_list(n,i,l):
     if (n+1==i):
@@ -109,7 +108,7 @@ def enum(n):
             T.append( sum([T[k]*T[i-1-k] for k in range(0,i)]) )
     return T[n]
 
-print(growing_tree(5))
+
 @given(list(list(integers)),integers)
 def check_uniform(l,n):
     mots=dict()
@@ -118,4 +117,17 @@ def check_uniform(l,n):
         mots[buff]=mots.get(buff,0)+1
     t=float(enum(n))
     assert mots[next(iter(mots))]/len(l) ==1/t
+
+
+def printTree(tab):
+    for t in tab:
+        print(t.id, tab[t.left].id, tab[t.right].id, tab[t.parent].id)
+    print("------------------------")
+    for t in tab:
+        print(t.id, t.left, t.right, t.parent)
+    print()
+        
+tab = growing_tree_deter(5,[i for i in range(10)])
+printTree(tab)
+print(mot(tab, 0))
     
