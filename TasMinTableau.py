@@ -2,7 +2,9 @@ from cle_comparaison import inf
 
 import math
 
-
+from hypothesis.strategies import integers,lists
+from hypothesis import given
+ 
 def parent(i):
     if(i==0):
         return -1
@@ -92,3 +94,5 @@ def MinHeap2(A,i):
         if (parent(i)!=-1):
             MinHeap(A,parent(i))
 
+
+    

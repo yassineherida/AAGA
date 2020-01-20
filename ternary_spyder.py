@@ -7,6 +7,8 @@ Created on Mon Jan  6 12:42:34 2020
 """
 
 import random
+from hypothesis.strategies import integers,lists,texts
+from hypothesis import given
 
 NB = 0
 
@@ -225,4 +227,16 @@ def checkpropri(A):
 
 print(checkpropri(b))
 print(checkpropri(c))
+
+@given(lists(texts),integers)
+def checkfusion(mots,nb):
+    c = buildTreeBookFusion2(mots, nb)
+    m2=[]
+    for m in mots :
+        if(get(c, m)) :
+            m2.append(m)
+    assert mots==m2
+    
+      
+
 #Exemple fusion marche aps inserer state puis a

@@ -1,4 +1,7 @@
 import random
+import random
+from hypothesis.strategies import integers,lists,texts
+from hypothesis import given
 
 class Node : 
 	def __init__(self, id, left, right, parent):
@@ -97,4 +100,22 @@ def all_list(n,i,l):
     return all_list(n,i+1,res)
 
 #print(all_list(2,0,list()))
+T = [1]
+def enum(n):
+    global T
+
+    if len(T)<n:
+        for i in range(len(T),n+1):
+            T.append( sum([T[k]*T[i-1-k] for k in range(0,i)]) )
+    return T[n]
+
 print(growing_tree(5))
+@given(list(list(integers)),integers)
+def check_uniform(l,n):
+    mots=dict()
+    for i in l:
+        buff=mot(growing_tree_deter(i,n))
+        mots[buff]=mots.get(buff,0)+1
+    t=float(enum(n))
+    assert mots[next(iter(mots))]/len(l) ==1/t
+    
