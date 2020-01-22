@@ -90,15 +90,13 @@ def all_list(n,i,l):
         return all_list(n,i+1,l)
     for e in l:
         for j in range(0,i+1):
-            print(e)
-            print(j)
             buff=e.copy()
             buff.append(j)
             res.append(buff)
         
     return all_list(n,i+1,res)
 
-#print(all_list(2,0,list()))
+print(all_list(3,0,list()))
 T = [1]
 def enum(n):
     global T
@@ -113,11 +111,15 @@ def enum(n):
 def check_uniform(l,n):
     mots=dict()
     for i in l:
-        buff=mot(growing_tree_deter(i,n))
+        buff=mot(growing_tree_deter(n,i),0)
         mots[buff]=mots.get(buff,0)+1
-    t=float(enum(n))
-    assert mots[next(iter(mots))]/len(l) ==1/t
+    #t=float(enum(n))
+    print("taille " + str(n) + " : " + str(mots))
+    #assert mots[next(iter(mots))]/len(l) ==1/t
+    
 
+for i in range(2,5):
+    check_uniform(all_list(i,0,list()),i)
 
 def printTree(tab):
     for t in tab:
@@ -127,7 +129,7 @@ def printTree(tab):
         print(t.id, t.left, t.right, t.parent)
     print()
         
-tab = growing_tree_deter(5,[i for i in range(10)])
-printTree(tab)
-print(mot(tab, 0))
+tab = growing_tree_deter(5,[0,1,2,3,4])
+
+
     
