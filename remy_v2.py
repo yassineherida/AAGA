@@ -4,12 +4,41 @@
 
 Ceci est un script temporaire.
 """
+def rand48(n):
 
-def rand48(m, a, c, g, n):
+    a = 25214903917
+    c = 11
+    m = 2**48
+
+    return (a*n+c) % m
+
+##def init(n):
+##    if n < 2**40:
+##        return rand48(n+2**40)
+##    else:
+##        return rand48(n)
+
+cpt = 0
+n = 123456789 + 2^40
+r = 0
+
+def bit_suivant():
+    global n, cpt, r
+
+    if cpt == 0:
+        cpt = 48
+        n = rand48(n)
+        r = n
+
+    bit = r % 2
+    r = r // 2
+    cpt = cpt-1
+    return bit
+def rand481(m, a, c, g, n):
     if(n==0):
         return g
     else:
-        res = (a *rand48(m, a, c, g, n-1) + c)%m
+        res = (a *rand481(m, a, c, g, n-1) + c)%m
         return res
 
 tab = 123456789+2**40
@@ -20,12 +49,12 @@ c = 11
 a = 25214903917
 n = 1
 cpt=0
-def bit_suivant():
+def bit_suivants():
      global btab
      global tab,cpt,n
      if(cpt == 0):
         cpt=48
-        tab = rand48(modulo, a, c, tab, n) 
+        tab = rand481(modulo, a, c, tab, n) 
         #print(tab)
         if(n==2):
             n=1
@@ -37,7 +66,7 @@ def bit_suivant():
      #btab = btab[1:]
      return bit
 
-rand48(2**48, 25214903917, 11, 0, 10)
+
 
 def genInt(n):
     nbbits=1
@@ -149,20 +178,16 @@ def remy2(n,t):
     #print(cpt1)
     while(n>cpt1):
         #print("ici ", cpt1)
+        #print (t)
         x=t[0]
-        t=t[1:]
+        b=t[1]
+        t=t[2:]
         #x = genInt(2*cpt1)
         noeud = tab1[x]
         pere =noeud.parent
         e = Tree(None, None,noeud.parent)
-        if(pere!=None):
-            if(pere.gauche==noeud):
-                pere.gauche=e
-            else:
-                pere.droite=e
-        noeud.parent=e
-        tab1.append(e)
-        if (bit_suivant()):
+        
+        if (b):
             e.gauche = noeud
             e.droite = Tree(None, None,e)
             tab1.append(e.droite)
@@ -170,6 +195,13 @@ def remy2(n,t):
             e.droite = noeud
             e.gauche = Tree(None, None,e)
             tab1.append(e.gauche)
+        if(pere!=None):
+            if(pere.gauche==noeud):
+                pere.gauche=e
+            else:
+                pere.droite=e
+        noeud.parent=e
+        tab1.append(e)
         cpt1 += 1
     #print(tab1)
     #print(cpt1)
@@ -182,13 +214,17 @@ def all_list2(n,i,l):
         return l
     res=list()
     if(i==0):
-        l.append([0])
+        l.append([0,0])
+        l.append([0,1])
         return all_list2(n,i+1,l)
     for e in l:
         for j in range(0,(2*i)+1):
             buff=e.copy()
             buff.append(j)
-            res.append(buff)
+            for r in range (0,2):
+                buff2=buff.copy()
+                buff2.append(r)
+                res.append(buff2)
         
     return all_list2(n,i+1,res)
 #print(arbre2str(findR(remy(3))))
@@ -207,6 +243,7 @@ def mot2(A):
     
 def check_uniform(l,n):
     mots=dict()
+    print (len(l))
     for i in l:
         a=remy2(n,i)
         #print(findR3(a,0))
