@@ -100,71 +100,130 @@ def remy(n):
         x = genInt(2*cpt1)
         noeud = tab1[x]
         e = Tree(None, None,noeud.parent)
-        tab1.append(e)
+       
         if(bit_suivant()):
             noeud.parent=e
             e.gauche = noeud
             e.droite = Tree(None, None,e)
+            tab1.append(e)
             tab1.append(e.droite)
         else : 
             noeud.parent=e
             e.droite = noeud
             e.gauche = Tree(None, None,e)
+            tab1.append(e)
             tab1.append(e.gauche)
         cpt1 += 1
     #print(tab1)
     return tab1
     #return tab1[j]
-def findR(t):
-    if (t[0].parent==None):
-        return t[0]
+    
+def findR2(t,i):
+    if (t[i].parent==None):
+        #print("ici")
+        return i
     else:
-        return findR(t[1:])
+        return findR2(t,i+1)
+    
+def findR3(t,i):
+    if (len(t)==0):
+        return i
+    if(t[0].gauche==None and t[0].droite==None):
+        #print("ici")
+        return findR3(t[1:],i+1)  
+    else:
+        return findR3(t[1:],i)   
+    
 def remy2(n,t):
+    print(t)
     tab1 = []
     cpt1 = 0
+    
     n0 = Tree(None, None,None, True)
+    #aa=Tree(None, None,n0)
+    #bb=Tree(None, None,n0)
     tab1.append(n0)
-    print(n)
-    print(cpt1)
-    j=0
+    #tab1.append(aa)
+    #tab1.append(bb)
+    #print(n)
+    #print(cpt1)
     while(n>cpt1):
         #print("ici ", cpt1)
-        #x = genInt(2*cpt1)
         x=t[0]
         t=t[1:]
+        #x = genInt(2*cpt1)
         noeud = tab1[x]
-        if(noeud.racine == True):
-            e = Tree(None, None,None, True)
-            n0=e
-            j=x
-            noeud.racine = False
-        else:
-            e = Tree(None, None)
-        if(bit_suivant()):
+        pere =noeud.parent
+        e = Tree(None, None,noeud.parent)
+        if(pere!=None):
+            if(pere.gauche==noeud):
+                pere.gauche=e
+            else:
+                pere.droite=e
+        noeud.parent=e
+        tab1.append(e)
+        if (bit_suivant()):
             e.gauche = noeud
-            e.droite = Tree(None, None,None)
+            e.droite = Tree(None, None,e)
             tab1.append(e.droite)
         else : 
             e.droite = noeud
-            e.gauche = Tree(None, None,None)
+            e.gauche = Tree(None, None,e)
             tab1.append(e.gauche)
-        tab1.append(e)
         cpt1 += 1
     #print(tab1)
-    return tab1[j]
+    #print(cpt1)
+    
+    return tab1
+    #return tab1[j]
 
-
-print(arbre2str(findR(remy(3))))
-aa=remy(2)
+def all_list2(n,i,l):
+    if (n+1==i):
+        return l
+    res=list()
+    if(i==0):
+        l.append([0])
+        return all_list2(n,i+1,l)
+    for e in l:
+        for j in range(0,(2*i)+1):
+            buff=e.copy()
+            buff.append(j)
+            res.append(buff)
+        
+    return all_list2(n,i+1,res)
+#print(arbre2str(findR(remy(3))))
+#aa=remy(2)
 #print(arbre2str(findR(aa)))
 #print(arbre2str(remy(4)))
 
-print(arbre2str(findR(remy(4))))
+#print(arbre2str(findR(remy(4))))
 
+def mot2(A):
+    #print(i)
+    if (A.gauche==None and A.droite==None):
+        return ""
+    else:
+        return "("+mot2(A.gauche)+")"+mot2(A.droite)
+    
+def check_uniform(l,n):
+    mots=dict()
+    for i in l:
+        a=remy2(n,i)
+        #print(findR3(a,0))
+        #print("lol")
+        b=findR2(a,0)
+        #print(b)
+        buff=mot2(a[b])
+        #print(buff)
+        mots[buff]=mots.get(buff,0)+1
+    #t=float(enum(n))
+    print("taille " + str(n) + " : " + str(mots))
+    #assert mots[next(iter(mots))]/len(l) ==1/t
+    
 
-
-
+for i in range(0,4):
+    #print (all_list2(i,0,list()))
+    check_uniform(all_list2(i,0,list()),i)
 
 
 
