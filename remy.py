@@ -96,8 +96,6 @@ def all_list(n,i,l):
         
     return all_list(n,i+1,res)
 
-print(all_list(3,0,list()))
-T = [1]
 def enum(n):
     global T
 
@@ -118,9 +116,6 @@ def check_uniform(l,n):
     #assert mots[next(iter(mots))]/len(l) ==1/t
     
 
-for i in range(2,5):
-    check_uniform(all_list(i,0,list()),i)
-
 def printTree(tab):
     for t in tab:
         print(t.id, tab[t.left].id, tab[t.right].id, tab[t.parent].id)
@@ -128,8 +123,7 @@ def printTree(tab):
     for t in tab:
         print(t.id, t.left, t.right, t.parent)
     print()
-        
-tab = growing_tree_deter(5,[0,1,2,3,4])
+
 
 
     

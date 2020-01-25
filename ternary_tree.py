@@ -7,8 +7,8 @@ Created on Mon Jan  6 12:42:34 2020
 """
 
 import random
-#from hypothesis.strategies import integers,lists,texts
-#from hypothesis import given
+from hypothesis.strategies import integers,lists,texts
+from hypothesis import given
 
 NB = 0
 
@@ -208,7 +208,7 @@ for m in ze :
 print(checkpropri(b))
 print(checkpropri(c))
 
-#@given(lists(texts),integers)
+@given(lists(texts),integers)
 def checkfusion(mots, nb):
     c = buildTreeBookFusion2(mots, nb)
     m2=[]
