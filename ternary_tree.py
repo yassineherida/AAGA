@@ -1,8 +1,18 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Jan  6 12:42:34 2020
+
+@author: 3873896
+"""
+
 import random
+#from hypothesis.strategies import integers,lists,texts
+#from hypothesis import given
 
 NB = 0
 
-class Arbre: 
+class Arbre:
     def __init__(self, cle, val, F):
         global NB
         self.id = NB
@@ -21,14 +31,15 @@ class Arbre:
         return g
 
 
-
+#Genere un arbre a 1 feuille
 def gener_feuille():
     return Arbre('', None, [])
 
+#Genere un arbre a 1 noeud
 def gener_noeud(cle, val, F):
     return Arbre(cle, val, F)
 
-
+#Genere un arbre a partir d'un mot
 def cons(mot):
     if mot == '':
         return gener_feuille()
@@ -38,7 +49,7 @@ def cons(mot):
         else:
             return gener_noeud(mot[0], None, [gener_feuille(), cons(mot[1:]), gener_feuille()])
 
-
+#Insere un mot dans l'arbre
 def insert(A, mot):
     if mot == '':
         return A
@@ -55,7 +66,7 @@ def insert(A, mot):
         val = A.val
         return gener_noeud(A.cle, val, [A.fils[0], A.fils[1], insert(A.fils[2], mot)])
 
-
+#Fusionne 2 arbres
 def fusion(A, B):
     if A.cle == '':
         return B
@@ -73,10 +84,28 @@ def fusion(A, B):
         val = B.val
     return gener_noeud(A.cle, val,  [fusion(A.fils[0], B.fils[0]), fusion(A.fils[1], B.fils[1]), fusion(A.fils[2], B.fils[2])])
 
+#Fusionne 2 arbres 
+def fusion2(A, B):
+    if A.cle == '':
+        return B
+    if B.cle == '':
+        return A
+
+    if A.cle < B.cle:
+        return gener_noeud(A.cle, A.val,  [A.fils[0], A.fils[1], fusion(A.fils[2], B)])
+    if A.cle > B.cle:
+        return gener_noeud(A.cle, A.val,  [fusion(A.fils[0], B), A.fils[1], A.fils[2]])
+
+    if A.val != None:
+        val = A.val
+    else:
+        val = B.val
+    return gener_noeud(A.cle, val,  [fusion(A.fils[0], B.fils[0]), fusion(A.fils[1], B.fils[1]), fusion(A.fils[2], B.fils[2])])
+
+#Recherche un mot dans l'arbre
 def get(A, mot):
 	if(mot == "") :
 		return False	
-
 	if(A.cle == mot):
 		if(A.val == 0):
 			return True
@@ -92,7 +121,8 @@ def get(A, mot):
 	
 	return False
 
-
+#Construit un arbre a partir de nb mots aleatoires d'un fichier
+#en effectuant des insertions
 def buildTreeBook(fichier, nb):
 	contenu_fichier = open(fichier, "r").read().split()
 	arbre = gener_feuille()
@@ -107,6 +137,8 @@ def buildTreeBook(fichier, nb):
 	
 	return arbre, mots
 
+#Construit un arbre a partir de nb mots aleatoires d'un fichier
+#en effectuant des fusions 
 def buildTreeBookFusion(fichier, nb):
 	contenu_fichier = open(fichier, "r").read().split()
 	arbre = gener_feuille()
@@ -120,63 +152,71 @@ def buildTreeBookFusion(fichier, nb):
 	
 	return arbre
 
+# A SUPPRIMER DANS LE CODE FINAL ???
 def buildTreeBookFusion2(mots, nb):
-	arbre = gener_feuille()
-	for i in range(nb):
-		if(i >= len(mots)):
-			return arbre
-		arbre = fusion(cons(mots[i]),arbre)
-	
-	return arbre
+    arbre = gener_feuille()
+    for i in range(nb):
+        if(i >= len(mots)):
+            return arbre
+        print(arbre.affiche())
+        arbre = fusion(cons(mots[i]),arbre)
+    return arbre
+
+#Fonction auxiliaire de checkpropi(A)
+#Verifie si un noeud de l'arbre verifie bien les proprietes
+def checkcroissant(fils, a):
+    if(len(fils) == 1 or len(fils) == 0):
+        return True
+    if (len(fils) == 2):
+        if(fils[0].cle == a):
+            if(fils[1] <= a):
+                return False
+        if (fils[1].cle == a):
+            if(fils[0].cle >= a):
+                return False
+        if(fils[0].cle == fils[1].cle):
+            return False
+    if (len(fils) == 3 and fils[0].cle != "" and fils[1].cle != "" and fils[2].cle != ""):
+        if (fils[0].cle >= a or fils[2].cle <= a ):
+            return False
+
+#Verifie si l'ensemble de l'arbre respecte bien les proprietes         
+def checkpropri(A):
+    if (checkcroissant(A.fils,A.cle)==False):
+        return False
+    for i in A.fils:
+        if (checkpropri(i) == False):
+            return False
+    return True
+
+
 
 
 chemin = "Shakespeare/Shakespeare/"
-nb = 4
+nb = 3
 b, mots = buildTreeBook(chemin + "john.txt", nb)
-print(b.affiche())
 
-c = buildTreeBookFusion2(mots, nb)
+ze=['o', 'brings', 'i']
+c = buildTreeBookFusion2(ze, nb)
 print(c.affiche())
- 
-print(mots)
-#print(c.affiche() == b.affiche())
 
-for m in mots :
-	if(not get(c, m)) :
-		print(m + " : non trouve dans fusion")
-	if(not get(b, m)) :
-		print(m + " : non trouve dans insertion")
 
-def checkcroissant(m,a):
-   
-    if(len(m)==1 or len(m)== 0):
-        return True
-    if (len(m)==2):
-		if(m[0]==a):
-			if(m[1]<=a):
-				return False
-		if (m[1]==a):
-			if(m[0]>=a):
-				return False
-		if(m[0]==m[1]):
-			return False
-    if (len(m)==3):
-    	if (m[0].cle>=a or m[2].cle<=a or m[0]==m[1] or m[1]==m[2] or m[0]==m[2]):
-        	return False
-    else :
-        return checkcroissant(m[1:],a)
-def checkpropri(A):
-	if (checkcroissant(A.fils,A.cle)==False):
-		return False
-	for i in A.fils :
-		if (checkpropri(i) == False):
-			return False
-	return True
+for m in ze :
+    if(not get(b, m)) :
+        print(m + " : non trouve dans insertion")
 
 print(checkpropri(b))
 print(checkpropri(c))
 
-
-
-
+#@given(lists(texts),integers)
+def checkfusion(mots, nb):
+    c = buildTreeBookFusion2(mots, nb)
+    m2=[]
+    for m in mots :
+        if(get(c, m)) :
+            m2.append(m)
+    assert mots == m2
     
+      
+
+#Exemple fusion marche aps inserer state puis a
