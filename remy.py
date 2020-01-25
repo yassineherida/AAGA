@@ -111,9 +111,9 @@ def check_uniform(l,n):
     for i in l:
         buff=mot(growing_tree_deter(n,i),0)
         mots[buff]=mots.get(buff,0)+1
-    #t=float(enum(n))
+    t=float(enum(n))
     print("taille " + str(n) + " : " + str(mots))
-    #assert mots[next(iter(mots))]/len(l) ==1/t
+    assert mots[next(iter(mots))]/len(l) ==1/t
     
 
 def printTree(tab):
