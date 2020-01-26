@@ -137,7 +137,7 @@ def findR3(t,i):
         return findR3(t[1:],i+1)  
     else:
         return findR3(t[1:],i)   
-    
+#Remy déterministe
 def remy2(n,t):
     tab1 = []
     cpt1 = 0
