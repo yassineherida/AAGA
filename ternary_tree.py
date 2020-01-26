@@ -218,5 +218,3 @@ def checkfusion(mots, nb):
     assert mots == m2
     
       
-
-#Exemple fusion marche aps inserer state puis a

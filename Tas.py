@@ -22,10 +22,12 @@ def inf (cle1,cle2):
 
 def eg(cle1,cle2):
     return int(cle1,16)==int(cle2,16)
+
 def parent2(i):
     if(i==0 or (i - 1) // 2 <0):
         return -1
     return (i - 1) // 2
+
 def parent(i):
     if(i==0):
         return -1
@@ -35,8 +37,10 @@ def parent(i):
     if (i%2==0):
         return s-1
     return s
+
 def gauche(i):
     return (2*i)+1
+
 def droite(i):
     return (2*(i))+2
 
@@ -46,6 +50,7 @@ def SupMin(A):
     B=A[0:d-1]
     MinHeap(B,0)
     return B
+
 def SupMin2(A):
     d=len(A)
     c=A[0]
@@ -69,15 +74,11 @@ def MinHeap(A,i):
     r=droite(i)
     s=len(A)-1
     p=i
-   # print(A)
-    #print("i",i)
-    #print ("a de i",A[i])
+    
     if(l <=s ):
-        #print ("left",A[l])
         if (A[l]<A[i]) :
             p=l
     if( r<=s ):
-        #print ("right",A[r])
         if (A[r]<A[p]):
                 p=r
 
@@ -85,12 +86,10 @@ def MinHeap(A,i):
         stock=A[i]
         A[i]=A[p]
         A[p]=stock
-        #print("p est",p)
         if (gauche(p)<=s or droite(p)<=s ):
-            #print("next")
-            #MinHeap2(A,i)
             MinHeap(A,p)
-    #MinHeap(A,0)
+    
+            
 def MinHeap2(A,i):
     l=gauche(i)
     r=droite(i)
@@ -111,13 +110,8 @@ def MinHeap2(A,i):
             MinHeap2(A,parent2(i))
 
 
-
-
-
 def heapempty(heap):
     return not heap
-
-
 
 @given(lists(integers()))
 def test_croissant(ls):
